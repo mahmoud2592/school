@@ -1,0 +1,61 @@
+version: '2'
+services:
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: blog_app
+      MYSQL_USER: blog_app
+      MYSQL_PASSWORD: password
+    ports:
+      - "3307:3306"
+
+  # redis:
+  #  image: "redis:4.0-alpine"
+  #  command: redis-server
+  #  ports:
+  #     - "6379:6379"
+  #  volumes:
+  #     - redis:/data
+
+  app:
+    build: .
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    volumes:
+      - ".:/blog_app"
+    ports:
+      - "3001:3000"
+    depends_on:
+      - db
+    links:
+      - db
+    environment:
+      DB_USER: root
+      DB_NAME: blog_app
+      DB_PASSWORD: password
+      DB_HOST: db
+
+  # sidekiq:
+  #   depends_on:
+  #       - "db"
+  #       - "redis"
+  #   build:
+  #     context: ..
+  #     dockerfile: ./docker/Dockerfile
+  #   command: sidekiq -C ./config/sidekiq.yml
+  #   volumes:
+  #       - "../.:/app"
+  #   environment:
+  #     REDIS_URL: redis://redis:6379
+  #     DB_USERNAME: root
+  #     DB_PASSWORD: root
+  #     DB_PORT: 5432
+  #     DB_HOST: db
+  #     RAILS_ENV: development
+  #     RAILS_MAX_THREADS: 5
+
+
+# volumes:
+#  db:
+#  redis:

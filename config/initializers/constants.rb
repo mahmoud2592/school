@@ -1,0 +1,1 @@
+POST_DURATION_TIME = 24.hours
