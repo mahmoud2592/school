@@ -24,7 +24,7 @@ class PostsController < ApiController
                     PostTag.create(tag_id: tag_id, post_id: post.id)
                 end
                 # worker
-                # DeleteAfter24hoursWorker.perform_at(post.created_at + POST_DURATION_TIME, post.id)
+                DeleteAfter24hoursWorker.perform_at(post.created_at + POST_DURATION_TIME, post.id)
                 render( json: { success: true, posts: PostSerializer.new(post).to_h }, status: :ok )
             else
                 render json: {error: "Post must has at least one tag!"}

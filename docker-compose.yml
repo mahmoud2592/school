@@ -11,13 +11,13 @@ services:
     ports:
       - "3307:3306"
 
-  # redis:
-  #  image: "redis:4.0-alpine"
-  #  command: redis-server
-  #  ports:
-  #     - "6379:6379"
-  #  volumes:
-  #     - redis:/data
+  redis:
+   image: "redis:4.0-alpine"
+   command: redis-server
+   ports:
+      - "6379:6379"
+   volumes:
+      - redis:/data
 
   app:
     build: .
@@ -36,26 +36,26 @@ services:
       DB_PASSWORD: password
       DB_HOST: db
 
-  # sidekiq:
-  #   depends_on:
-  #       - "db"
-  #       - "redis"
-  #   build:
-  #     context: ..
-  #     dockerfile: ./docker/Dockerfile
-  #   command: sidekiq -C ./config/sidekiq.yml
-  #   volumes:
-  #       - "../.:/app"
-  #   environment:
-  #     REDIS_URL: redis://redis:6379
-  #     DB_USERNAME: root
-  #     DB_PASSWORD: root
-  #     DB_PORT: 5432
-  #     DB_HOST: db
-  #     RAILS_ENV: development
-  #     RAILS_MAX_THREADS: 5
+  sidekiq:
+    depends_on:
+        - "db"
+        - "redis"
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile
+    command: sidekiq -C ./config/sidekiq.yml
+    volumes:
+        - "../.:/app"
+    environment:
+      REDIS_URL: redis://redis:6379
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      DB_PORT: 5432
+      DB_HOST: db
+      RAILS_ENV: development
+      RAILS_MAX_THREADS: 5
 
 
-# volumes:
-#  db:
-#  redis:
+volumes:
+ db:
+ redis:

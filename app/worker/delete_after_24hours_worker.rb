@@ -5,7 +5,7 @@ class DeleteAfter24hoursWorker
   
     def perform(post_id)
         post = Post.find_by(id: post_id)
-        post.delete
+        post.destroy
     end
   end
   
