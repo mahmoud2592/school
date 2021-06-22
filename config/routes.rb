@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   # post "/login", to: "users#login"
   # get "/auto_login", to: "users#auto_login"
 
+  resource :tags
+  get "tags/index", to: "tags#index"
+
   resource :posts
   get "posts/index", to: "posts#index"
   

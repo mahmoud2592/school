@@ -10,11 +10,13 @@ class PostsController < ApiController
         if post_params[:title].present? && post_params[:body].present?
             tags_ids_list = []
             has_tag_id = false
-            post_tags_params[:tags_ids].each do |tag_id|
-                my_tag = Tag.find_by(id: tag_id)
-                if !my_tag.nil?
-                    has_tag_id = true
-                    tags_ids_list << tag_id
+            if !post_tags_params[:tags_ids].nil?
+                post_tags_params[:tags_ids].each do |tag_id|
+                    my_tag = Tag.find_by(id: tag_id)
+                    if !my_tag.nil?
+                        has_tag_id = true
+                        tags_ids_list << tag_id
+                    end
                 end
             end
 
@@ -24,7 +26,7 @@ class PostsController < ApiController
                     PostTag.create(tag_id: tag_id, post_id: post.id)
                 end
                 # worker
-                DeleteAfter24hoursWorker.perform_at(post.created_at + POST_DURATION_TIME, post.id)
+                # DeleteAfter24hoursWorker.perform_at(post.created_at + POST_DURATION_TIME, post.id)
                 render( json: { success: true, posts: PostSerializer.new(post).to_h }, status: :ok )
             else
                 render json: {error: "Post must has at least one tag!"}
@@ -35,6 +37,8 @@ class PostsController < ApiController
     end
 
     def show
+        post = Post.find(params[:id])
+        render( json: { success: true, posts: PostSerializer.new(post).to_h }, status: :ok )
     end
 
     def update
