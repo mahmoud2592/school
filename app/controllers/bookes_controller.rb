@@ -12,7 +12,6 @@ class BookesController < ApiController
         render( json: { success: true, book: BookeSerializer.new(book).to_h }, status: :ok )
     end
 
-    # REGISTER
     def create
       if !params[:schedule_id].present?
         render json: {error: "Invalid schedule_id"}
