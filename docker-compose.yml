@@ -5,27 +5,27 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: blog_app
-      MYSQL_USER: blog_app
+      MYSQL_DATABASE: myschool
+      MYSQL_USER: myschool
       MYSQL_PASSWORD: password
     ports:
-      - "3377:3376"
+      - "3397:3396"
 
   redis:
    image: "redis:4.0-alpine"
    command: redis-server
    ports:
-      - "6380:6380"
+      - "6399:6399"
    volumes:
       - redis:/data
 
   app:
     build: .
-    command: bundle exec rails s -p 3002 -b '0.0.0.0'
+    command: bundle exec rails s -p 3092 -b '0.0.0.0'
     volumes:
-      - ".:/blog_app"
+      - ".:/myschool"
     ports:
-      - "3002:3002"
+      - "3092:3092"
     depends_on:
       - db
       - sidekiq
@@ -33,38 +33,38 @@ services:
       - db
     environment:
       DB_USER: root
-      DB_NAME: blog_app
+      DB_NAME: myschool
       DB_PASSWORD: password
       DB_HOST: db
 
-  # sidekiq:
-  #   build: .
-  #   command: bundle exec sidekiq
-  #   depends_on:
-  #     - redis
-  #   volumes:
-  #     - .:/blog_app
-  #   env_file:
-  #     - .env
-
   sidekiq:
+    build: .
+    command: bundle exec sidekiq
     depends_on:
-        - "db"
-        - "redis"
-    build:
-      context: ..
-      dockerfile: ./docker/Dockerfile
-    command: sidekiq -C ./config/sidekiq.yml
+      - redis
     volumes:
-        - "../.:/app"
-    environment:
-      REDIS_URL: redis://redis:6379
-      DB_USERNAME: root
-      DB_PASSWORD: root
-      DB_PORT: 5432
-      DB_HOST: db
-      RAILS_ENV: development
-      RAILS_MAX_THREADS: 5
+      - .:/myschool
+    env_file:
+      - .env
+
+  # sidekiq:
+  #   depends_on:
+  #       - "db"
+  #       - "redis"
+  #   build:
+  #     context: ..
+  #     dockerfile: ./docker/Dockerfile
+  #   command: sidekiq -C ./config/sidekiq.yml
+  #   volumes:
+  #       - "../.:/app"
+  #   environment:
+  #     REDIS_URL: redis://redis:6399
+  #     DB_USERNAME: root
+  #     DB_PASSWORD: root
+  #     DB_PORT: 5432
+  #     DB_HOST: db
+  #     RAILS_ENV: development
+  #     RAILS_MAX_THREADS: 5
 
 
 volumes:

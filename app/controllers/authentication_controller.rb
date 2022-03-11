@@ -1,22 +1,22 @@
 # app/controllers/authentication_controller.rb
 class AuthenticationController < ApiController
-    skip_before_action :authorize_user_request, only: [:user_authenticate]
-    # return auth token once user is authenticated
+    skip_before_action :authorize_student_request, only: [:authenticate]
+    # return auth token once student is authenticated
   
-    def user_authenticate
+    def authenticate
       auth_token =
-        AuthenticateUser.new(
+      AuthenticateStudent.new(
           auth_params[:email],
           auth_params[:password]
         ).call
       if auth_params[:email]
-        user = User.find_by(email: auth_params[:email])
+        student = Student.find_by(email: auth_params[:email])
       end
-      if user
+      if student
         render(
           json: {
             success: true,
-            user: user,
+            student: student,
             auth_token: auth_token,
           },
           status: 200
@@ -49,6 +49,10 @@ class AuthenticationController < ApiController
         )
       end
     end
+
+
+
+    
   
     private
   

@@ -2,12 +2,12 @@ FROM ruby:3.0.0
 
 RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs
 
-RUN mkdir /blog_app
-WORKDIR /blog_app
+RUN mkdir /myschool
+WORKDIR /myschool
 
-ADD Gemfile /blog_app/Gemfile
-ADD Gemfile.lock /blog_app/Gemfile.lock
+ADD Gemfile /myschool/Gemfile
+ADD Gemfile.lock /myschool/Gemfile.lock
 
 RUN bundle install
 
-ADD . /blog_app
+ADD . /myschool

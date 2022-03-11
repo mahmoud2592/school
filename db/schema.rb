@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_26_212445) do
+ActiveRecord::Schema.define(version: 2022_03_11_115112) do
 
   create_table "black_list_tokens", charset: "latin1", force: :cascade do |t|
     t.string "token"
@@ -18,53 +18,61 @@ ActiveRecord::Schema.define(version: 2021_01_26_212445) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "comments", charset: "latin1", force: :cascade do |t|
-    t.string "text"
-    t.string "image"
-    t.bigint "post_id", null: false
+  create_table "bookes", charset: "latin1", force: :cascade do |t|
+    t.bigint "student_id", null: false
+    t.bigint "schedule_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "user_id", null: false
-    t.index ["post_id"], name: "index_comments_on_post_id"
-    t.index ["user_id"], name: "index_comments_on_user_id"
+    t.index ["schedule_id"], name: "index_bookes_on_schedule_id"
+    t.index ["student_id"], name: "index_bookes_on_student_id"
   end
 
-  create_table "post_tags", charset: "latin1", force: :cascade do |t|
-    t.bigint "post_id", null: false
-    t.bigint "tag_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["post_id"], name: "index_post_tags_on_post_id"
-    t.index ["tag_id"], name: "index_post_tags_on_tag_id"
-  end
-
-  create_table "posts", charset: "latin1", force: :cascade do |t|
-    t.string "title"
-    t.string "body"
-    t.bigint "user_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_posts_on_user_id"
-  end
-
-  create_table "tags", charset: "latin1", force: :cascade do |t|
-    t.string "name"
+  create_table "lessons", charset: "latin1", force: :cascade do |t|
+    t.string "subject"
+    t.string "duration"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "users", charset: "latin1", force: :cascade do |t|
+  create_table "schedules", charset: "latin1", force: :cascade do |t|
+    t.bigint "lesson_id", null: false
+    t.bigint "timeline_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["lesson_id"], name: "index_schedules_on_lesson_id"
+    t.index ["timeline_id"], name: "index_schedules_on_timeline_id"
+  end
+
+  create_table "students", charset: "latin1", force: :cascade do |t|
     t.string "name"
     t.string "email"
-    t.string "image"
+    t.string "phone"
     t.string "password_digest"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  add_foreign_key "comments", "posts"
-  add_foreign_key "comments", "users"
-  add_foreign_key "post_tags", "posts"
-  add_foreign_key "post_tags", "tags"
-  add_foreign_key "posts", "users"
+  create_table "teachers", charset: "latin1", force: :cascade do |t|
+    t.string "name"
+    t.string "email"
+    t.string "phone"
+    t.string "password_digest"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "timelines", charset: "latin1", force: :cascade do |t|
+    t.datetime "from"
+    t.datetime "to"
+    t.bigint "teacher_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["teacher_id"], name: "index_timelines_on_teacher_id"
+  end
+
+  add_foreign_key "bookes", "schedules"
+  add_foreign_key "bookes", "students"
+  add_foreign_key "schedules", "lessons"
+  add_foreign_key "schedules", "timelines"
+  add_foreign_key "timelines", "teachers"
 end

@@ -1,17 +1,36 @@
 Rails.application.routes.draw do
 
-  post 'login_user', to: "authentication#user_authenticate"
-  post 'logout', to: "authentication#logout"
+  post 'login_student', to: "authentication#authenticate"
+  post 'student_logout', to: "authentication#logout"
 
-  resource :users, only: [:create]
-  # post "/login", to: "users#login"
-  # get "/auto_login", to: "users#auto_login"
+  post 'login_teacher', to: "authenticate_teacher#authenticate"
+  post 'teacher_logout', to: "authenticate_teacher#logout"
 
-  resource :tags
-  get "tags/index", to: "tags#index"
+  resource :students
+  resource :teachers
+  resource :lessons 
+  resource :schedules
+  resource :bookes
 
-  resource :posts
-  get "posts/index", to: "posts#index"
-  
-  resource :comments
+
+  get 'lessons/index', to: 'lessons#index'
+  get 'lessons/show/:id', to: 'lessons#show'
+ 
+  get 'timelines/index', to: 'timelines#index'
+  get 'timelines/show/:id', to: 'timelines#show'
+
+
+  get 'schedules/index', to: 'schedules#index'
+  get 'schedules/show/:id', to: 'schedules#show'
+
+
+  get 'bookes/index', to: 'bookes#index'
+  get 'bookes/show/:id', to: 'bookes#show'
+
+  # resource :timelines, only: [:create, :index]
+  # get 'timelines/:id', 'timelines#show'   
+  # get 'timelines/index', 'timelines#index' 
+
+  # post "/login", to: "students#login"
+  # get "/auto_login", to: "students#auto_login"
 end
